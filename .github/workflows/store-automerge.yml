@@ -1,0 +1,28 @@
+name: Auto-Merge to Multiple Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Loop through each branch and attempt the merge with a 10-minute interval
+      - name: Attempt Merges
+        run: |
+          branches=("store/store1" "store/store2")
+
+          for branch in "${branches[@]}"; do
+            git checkout -B "$branch"
+            git merge --no-ff origin/main || echo "Conflict in $branch - Merge failed"
+            git push origin "$branch" || echo "Push to $branch failed"
+            
+            # Sleep for 10 minutes before the next attempt
+            sleep 120
+          done
