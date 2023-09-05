@@ -22,7 +22,7 @@ jobs:
       # Loop through each branch and attempt the merge with a 10-minute interval
       - name: Attempt Merges
         run: |
-          branches=("origin/store/store1" "origin/store/store2")
+          branches=("store/store1" "store/store2")
           echo "Starting workflow..."
           
           for branch in "${branches[@]}"; do
