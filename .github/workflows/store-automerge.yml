@@ -17,26 +17,26 @@ jobs:
         run: |
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
-        
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-        
+          node-version: "16"
 
       # Loop through each branch and attempt the merge with a 10-minute interval
+      # Make sure to update the branch names
       - name: Attempt Merges
         run: |
           branches=("store/store1" "store/store2")
           echo "Starting workflow..."
-          
+
           for branch in "${branches[@]}"; do
             echo "Updating $branch..."
-            
+
             git checkout -B "$branch"
 
             # Pull latest changes from the remote branch and specify a merge strategy
-            git pull --no-edit --no-rebase --allow-unrelated-histories origin "$branch" 
+            git pull --no-edit --no-rebase --allow-unrelated-histories origin "$branch"
 
             git merge --no-edit --no-ff origin/main || {
               echo "Conflict in $branch - Merge failed."
@@ -46,7 +46,7 @@ jobs:
             }
 
             echo "$branch process complete. Next branch to start in 1 minute."
-            
+
             # Sleep for 10 minutes before the next attempt
             sleep 60
           done
